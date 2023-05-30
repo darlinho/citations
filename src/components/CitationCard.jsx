@@ -1,9 +1,30 @@
 import { Box, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
+import axios from "axios";
 
 
 const CitationCard = ({ citationObject, favoris }) => {
+
+
+
+    const handleCreate = () => {
+
+        const data = {
+            "citation": citationObject.citation,
+            "acteur": citationObject.infos.acteur,
+            "auteur": citationObject.infos.auteur,
+            "personnage": citationObject.infos.personnage,
+            "episode": citationObject.infos.episode,
+            "saison": citationObject.infos.saison
+        }
+        axios({
+            method: 'post',
+            url: process.env.REACT_APP_BASE_URL + 'citation',
+            data: data
+        })
+
+    }
+
 
     return (
         <Box
@@ -49,23 +70,14 @@ const CitationCard = ({ citationObject, favoris }) => {
             </Typography>
 
             <Typography sx={{ display: "flex", justifyContent: "center", textAlign: "center", }}>
-                {favoris
-                    ? <>
-                        <StarIcon
-                            sx={{
-                                color: "#8F00FF"
-                            }}
-                        />
-                        <a href="/">Rétirer des favoris</a>
-                    </>
-
-                    : <>
+                {!favoris &&
+                    <>
                         <StarBorderIcon
                             sx={{
                                 color: "#8F00FF"
                             }}
                         />
-                        <a href="/">Mettre en favoris</a>
+                        <Typography sx={{ cursor: 'pointer', textDecoration: 'underline', color: "#8F00FF" }} onClick={handleCreate}> Mettre en favoris</Typography>
                     </>
                 }
             </Typography>

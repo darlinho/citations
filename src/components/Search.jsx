@@ -1,11 +1,25 @@
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from "react";
+import axios from "axios";
 
 
-const Search = () => {
+const Search = ({ name }) => {
+
+    const [search, setSearch] = useState('');
 
     const handleClickSearch = () => {
-        console.log("sdsdsds");
+        console.log(search);
+
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BASE_URL + 'citation/search?name=' + search,
+            responseType: "json"
+        }).then((response) => {
+            name(response.data.citations)
+            console.log(response.data.citations)
+        });
+
     }
     return (
         <>
@@ -15,7 +29,11 @@ const Search = () => {
                 }}
                 variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-search" color="secondary">Rechercher dans mes citations</InputLabel>
-                <OutlinedInput color="secondary" sx={{ borderRadius: 3, margin: 0 }}
+                <OutlinedInput onChange={(e) => {
+                    setSearch(e.target.value)
+                }}
+                    color="secondary"
+                    sx={{ borderRadius: 3, margin: 0 }}
                     id="outlined-adornment-search"
                     endAdornment={
                         <InputAdornment position="end">
